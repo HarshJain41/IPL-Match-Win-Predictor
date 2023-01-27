@@ -45,6 +45,7 @@ city = st.selectbox(
 
 target = int(st.number_input('Target', step=1))
 
+
 col3, col4, col5 = st.columns(3)
 
 with col3:
@@ -56,40 +57,45 @@ with col4:
 with col5:
     wickets = int(st.number_input('Wickets Fallen', step=1))
 
-try:
+if target >= 0 and target <= 300  and overs >= 0 and overs <=20 and wickets <= 10:
 
-    if st.button('Predict Probability'):
+    
+    try:
 
-        runs_left = target-score
-        balls_left = 120-(overs*6)
-        wickets = 10-wickets
-        currentrunrate = score/overs
-        requiredrunrate = (runs_left*6)/balls_left
+        if st.button('Predict Probability'):
 
-        input_df = pd.DataFrame({'batting_team': [battingteam], 'bowling_team': [bowlingteam], 'city': [city], 'runs_left': [runs_left], 'balls_left': [
-                                balls_left], 'wickets': [wickets], 'total_runs_x': [target], 'cur_run_rate': [currentrunrate], 'req_run_rate': [requiredrunrate]})
+            runs_left = target-score
+            balls_left = 120-(overs*6)
+            wickets = 10-wickets
+            currentrunrate = score/overs
+            requiredrunrate = (runs_left*6)/balls_left
 
-        # st.table(input_df)
-    #     cols_to_transform = ['batting_team','bowling_team','city']
-    #     ct = ColumnTransformer(
-    #     transformers=[
-    #         ('onehot', OneHotEncoder(), cols_to_transform)
-    #     ],
-    #     remainder='passthrough'
-    # )
-        # input_df = pd.get_dummies(input_df, drop_first = True)
-        # st.table(input_df)
-        # encoder = OneHotEncoder()
-        # encoder.fit(input_df)
-        # one_hot_encoded_data = encoder.transform(input_df)
-        # st.table(one_hot_encoded_data)
-        result = pipe.predict_proba(input_df)
-        lossprob = result[0][0]
-        winprob = result[0][1]
+            input_df = pd.DataFrame({'batting_team': [battingteam], 'bowling_team': [bowlingteam], 'city': [city], 'runs_left': [runs_left], 'balls_left': [
+                                    balls_left], 'wickets': [wickets], 'total_runs_x': [target], 'cur_run_rate': [currentrunrate], 'req_run_rate': [requiredrunrate]})
 
-        st.header(battingteam+"- "+str(round(winprob*100))+"%")
+            # st.table(input_df)
+        #     cols_to_transform = ['batting_team','bowling_team','city']
+        #     ct = ColumnTransformer(
+        #     transformers=[
+        #         ('onehot', OneHotEncoder(), cols_to_transform)
+        #     ],
+        #     remainder='passthrough'
+        # )
+            # input_df = pd.get_dummies(input_df, drop_first = True)
+            # st.table(input_df)
+            # encoder = OneHotEncoder()
+            # encoder.fit(input_df)
+            # one_hot_encoded_data = encoder.transform(input_df)
+            # st.table(one_hot_encoded_data)
+            result = pipe.predict_proba(input_df)
+            lossprob = result[0][0]
+            winprob = result[0][1]
 
-        st.header(bowlingteam+"- "+str(round(lossprob*100))+"%")
-except ZeroDivisionError:
-    st.error("Please fill all the required details")
+            st.header(battingteam+"- "+str(round(winprob*100))+"%")
+
+            st.header(bowlingteam+"- "+str(round(lossprob*100))+"%")
+    except ZeroDivisionError:
+        st.error("Please fill all the required details")
+else:
+    st.error('There is something wrong with the input, please fill in the correct details as of IPL T-20 format')
 
