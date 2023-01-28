@@ -34,6 +34,7 @@ col1, col2 = st.columns(2)
 with col1:
     battingteam = st.selectbox('Select the batting team', sorted(teams))
 
+
 with col2:
 
     bowlingteam = st.selectbox('Select the bowling team', sorted(teams))
@@ -58,6 +59,13 @@ with col5:
     wickets = int(st.number_input('Wickets Fallen', step=1))
 if score > target:
     st.write(battingteam,"won the match")
+elif score == target-1 and overs==20:
+    st.write("Match Drawn")
+elif wickets==10 and score < target-1:
+    st.write(bowlingteam, 'Won the match')
+elif battingteam==bowlingteam:
+    st.write('To proceed, please select different teams as no match can be played between same teams')
+
 else:
 
 
